@@ -33,10 +33,26 @@ const deleteTodo = async (id) => {
   }
 };
 
+const editTodo = async (id, newName) => {
+  console.log('editTodo id', id)
+  console.log('editTodo newName', newName)
+  try {
+    const res = await db.query(
+      'UPDATE test_table SET name = $1 WHERE id = $2 RETURNING *',
+      [newName, id]
+    );
+    return res.rows[0];
+  } catch (err) {
+    console.error('Error updating todo:', err);
+    throw err;
+  }
+};
+
 module.exports = {
   getAllTodos,
   addTodo,
   deleteTodo,
+  editTodo
 };
 
 //CRUD

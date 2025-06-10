@@ -34,8 +34,21 @@ app.post('/todos', async (req, res) => {
 
 app.delete('/todos/:id', async (req, res) => {
   try {
+    console.log('delete params', req.params)
     const result = await dbOps.deleteTodo(req.params.id);
+    // const result = await dbOps.deleteTodo(id);
     res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete todo' });
+  }
+});
+
+app.put('/todos/:id', async (req, res) => {
+  try {
+    console.log('put params', req.params)
+    console.log('put body', req.body.data)
+    const editTodo = await dbOps.editTodo(req.params.id, req.body.data);
+    res.json(editTodo);
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete todo' });
   }
