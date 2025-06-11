@@ -1,10 +1,12 @@
 const db = require('./db');
 
 const createTable = async () => {
+  // shape of table - i mean here u describe withc fields your 
   const queryText = `
     CREATE TABLE IF NOT EXISTS test_table (
       id SERIAL PRIMARY KEY,
-      name VARCHAR(100) NOT NULL
+      name VARCHAR(100) NOT NULL,
+      image_path VARCHAR(255)
     );
   `;
 

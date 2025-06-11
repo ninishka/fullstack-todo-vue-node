@@ -12,9 +12,12 @@ const getAllTodos = async () => {
 };
 
 // Function to add a new to-do item
-const addTodo = async (name) => {
+const addTodo = async (name, imagePath = null) => {
   try {
-    const res = await db.query('INSERT INTO test_table (name) VALUES ($1) RETURNING *', [name]);
+    const res = await db.query(
+      'INSERT INTO test_table (name, image_path) VALUES ($1, $2) RETURNING *',
+      [name, imagePath]
+    );
     return res.rows[0];
   } catch (err) {
     console.error('Error adding todo:', err);
