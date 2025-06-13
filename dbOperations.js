@@ -57,9 +57,3 @@ module.exports = {
   deleteTodo,
   editTodo
 };
-
-//CRUD
-// + Create === POST
-// +/- Read === GET (u can read all of them, but u cannot read only one for now - so create pls page for todo ID info)
-// Update === PUT
-// + Delete === DELETE
