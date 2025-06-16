@@ -12,11 +12,11 @@ const getAllTodos = async () => {
 };
 
 // Function to add a new to-do item
-const addTodo = async (name, imagePath = null) => {
+const addTodo = async (name, imagePath = null, description) => {
   try {
     const res = await db.query(
-      'INSERT INTO test_table (name, image_path) VALUES ($1, $2) RETURNING *',
-      [name, imagePath]
+      'INSERT INTO test_table (name, image_path, description) VALUES ($1, $2, $3) RETURNING *',
+      [name, imagePath, description]
     );
     return res.rows[0];
   } catch (err) {
@@ -36,13 +36,14 @@ const deleteTodo = async (id) => {
   }
 };
 
-const editTodo = async (id, newName) => {
+const editTodo = async (id, newName, newDesq) => {
   console.log('editTodo id', id)
+  console.log('editTodo,newDesq', newDesq)
   console.log('editTodo newName', newName)
   try {
     const res = await db.query(
-      'UPDATE test_table SET name = $1 WHERE id = $2 RETURNING *',
-      [newName, id]
+      'UPDATE test_table SET name = $1, description = $3 WHERE id = $2 RETURNING *',
+      [newName, id, newDesq]
     );
     return res.rows[0];
   } catch (err) {

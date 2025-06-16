@@ -58,8 +58,9 @@ app.post('/todo', upload.single('image'), async (req, res) => {
   try {
     const todoText = req.body.text;//Retrieves the text input from the form.is where the user-typed task name is captured.
     const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-    
-    const newTodo = await dbOps.addTodo(todoText, imagePath);
+    const description = req.body.description;
+
+    const newTodo = await dbOps.addTodo(todoText, imagePath, description);
     res.status(201).json(newTodo);
   } catch (err) {
     console.error('Error:', err);
@@ -69,7 +70,7 @@ app.post('/todo', upload.single('image'), async (req, res) => {
 
 app.delete('/todo/:id', async (req, res) => {//Deletes a todo based on id from the URL.
   try {
-    console.log('delete params', req.params)
+    // console.log('delete params', req.params)
     const result = await dbOps.deleteTodo(req.params.id);
     res.json(result);
   } catch (err) {
@@ -79,14 +80,21 @@ app.delete('/todo/:id', async (req, res) => {//Deletes a todo based on id from t
 
 app.put('/todo/:id', async (req, res) => {//updates doto based on its id.
   try {
-    console.log('put params', req.params)
+    // console.log('put params', req.params)
     console.log('put body', req.body.data)
-    const editTodo = await dbOps.editTodo(req.params.id, req.body.data);
+
+    const id = req.params.id
+    const newName = req.body.data.name
+    const newDesq = req.body.data.description
+
+    const editTodo = await dbOps.editTodo(id, newName, newDesq);
     res.json(editTodo);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to delete todo' });
+    res.status(500).json({ error: 'Failed to edit todo' });
   }
 });
+
+
 
 app.listen(port, () => {//Starts the Express app and listens for requests on port 3000.
   console.log(`Example app listening at http://localhost:${port}`);

@@ -6,7 +6,8 @@ const createTable = async () => {
     CREATE TABLE IF NOT EXISTS test_table (
       id SERIAL PRIMARY KEY,
       name VARCHAR(100) NOT NULL,
-      image_path VARCHAR(255)
+      image_path VARCHAR(255),
+      description VARCHAR(255)
     );
   `;
 
@@ -21,6 +22,8 @@ const createTable = async () => {
 const insertData = async () => {
   const queryText = 'INSERT INTO test_table (name) VALUES ($1) RETURNING *';
   const values = ['Sample Name'];
+
+  console.log('insertData')
 
   try {
     const res = await db.query(queryText, values);
