@@ -36,14 +36,14 @@ const deleteTodo = async (id) => {
   }
 };
 
-const editTodo = async (id, newName, newDesq) => {
+const editTodo = async (id, newName, newDesq, completed)=> {
   console.log('editTodo id', id)
   console.log('editTodo,newDesq', newDesq)
   console.log('editTodo newName', newName)
   try {
     const res = await db.query(
-      'UPDATE test_table SET name = $1, description = $3 WHERE id = $2 RETURNING *',
-      [newName, id, newDesq]
+      'UPDATE test_table SET name = $1, description = $3, completed = $4 WHERE id = $2 RETURNING *',
+      [newName, id, newDesq, completed]
     );
     return res.rows[0];
   } catch (err) {
@@ -52,9 +52,21 @@ const editTodo = async (id, newName, newDesq) => {
   }
 };
 
+// Function to get a single to-do item by ID
+const getTodoById = async (id) => {
+  try {
+    const res = await db.query('SELECT * FROM test_table WHERE id = $1', [id]);
+    return res.rows[0]; // Return the first (and only) row, or undefined if not found
+  } catch (err) {
+    console.error('Error fetching todo by ID:', err);
+    throw err;
+  }
+};
+
 module.exports = {
   getAllTodos,
   addTodo,
   deleteTodo,
-  editTodo
+  editTodo,
+  getTodoById
 };

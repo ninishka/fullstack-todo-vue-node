@@ -7,7 +7,7 @@ const createTable = async () => {
       id SERIAL PRIMARY KEY,
       name VARCHAR(100) NOT NULL,
       image_path VARCHAR(255),
-      description VARCHAR(255)
+      description VARCHAR(255),
     );
   `;
 

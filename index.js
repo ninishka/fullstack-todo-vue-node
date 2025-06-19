@@ -42,7 +42,7 @@ app.use('/uploads', express.static('uploads'));//express.static(): Serves upload
 
 // Add a route for the root URL
 app.get('/', (req, res) => {
-  res.send('Welcome to the To-Do API');//Returns a simple message. Good for checking if the server is running.
+  res.send('Welcome to the To-Do API');//Returns a simple message. Good for checking if the server is running.  
 });
 
 app.get('/todos', async (req, res) => {
@@ -51,6 +51,23 @@ app.get('/todos', async (req, res) => {
     res.json(todos);//returns all todos as json
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch todos' });
+  }
+});
+
+// Get a single todo by ID
+app.get('/api/todos/:id', async (req, res) => {
+  try {
+    const todoId = req.params.id;
+    const todo = await dbOps.getTodoById(todoId);
+    
+    if (!todo) {
+      return res.status(404).json({ error: 'Todo not found' });
+    }
+    
+    res.json(todo);
+  } catch (err) {
+    console.error('Error fetching todo:', err);
+    res.status(500).json({ error: 'Failed to fetch todo' });
   }
 });
 
@@ -86,8 +103,9 @@ app.put('/todo/:id', async (req, res) => {//updates doto based on its id.
     const id = req.params.id
     const newName = req.body.data.name
     const newDesq = req.body.data.description
+    const completed = req.body.data.completed
 
-    const editTodo = await dbOps.editTodo(id, newName, newDesq);
+    const editTodo = await dbOps.editTodo(id, newName, newDesq, completed);
     res.json(editTodo);
   } catch (err) {
     res.status(500).json({ error: 'Failed to edit todo' });
