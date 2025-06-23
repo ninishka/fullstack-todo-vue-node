@@ -1,41 +1,53 @@
 const db = require('./db');
 
-const createTable = async () => {
-  // shape of table - i mean here u describe withc fields your 
+//creates the database schema for auth
+const createUsersTable = async () => {
+  const queryText = `
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      username VARCHAR(50) UNIQUE NOT NULL,
+      email VARCHAR(100) UNIQUE NOT NULL,
+      password_hash VARCHAR(255) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+  `;
+
+  try {
+    await db.query(queryText);
+    console.log('Users table created successfully');
+  } catch (err) {
+    console.error('Error creating users table:', err);
+  }
+};
+
+const createTodosTable = async () => {
+  // Updated todos table structure
   const queryText = `
     CREATE TABLE IF NOT EXISTS test_table (
       id SERIAL PRIMARY KEY,
       name VARCHAR(100) NOT NULL,
       image_path VARCHAR(255),
       description VARCHAR(255),
+      completed BOOLEAN DEFAULT FALSE,
+      user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
   `;
 
   try {
     await db.query(queryText);
-    console.log('Table created successfully');
+    console.log('Todos table created successfully');
   } catch (err) {
-    console.error('Error creating table:', err);
-  }
-};
-
-const insertData = async () => {
-  const queryText = 'INSERT INTO test_table (name) VALUES ($1) RETURNING *';
-  const values = ['Sample Name'];
-
-  console.log('insertData')
-
-  try {
-    const res = await db.query(queryText, values);
-    console.log('Data inserted:', res.rows[0]);
-  } catch (err) {
-    console.error('Error inserting data:', err);
+    console.error('Error creating todos table:', err);
   }
 };
 
 const setupDatabase = async () => {
-  await createTable();
-  await insertData();
+  await createUsersTable();
+  await createTodosTable();
+  console.log('Database setup completed');
 };
 
 setupDatabase(); 
